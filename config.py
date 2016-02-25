@@ -3,6 +3,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 WTF_CSRF_ENABLED = True
 SECRET_KEY = os.environ.get('TO_WATCH_LIST_SECRET_KEY') or 'you-will-never-guess'
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = '587'
+MAIL_USE_TLS = True
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
 OPENID_PROVIDERS = [
     {'name': 'Google', 'url': 'https://www.google.com/accounts/o8/id'},
