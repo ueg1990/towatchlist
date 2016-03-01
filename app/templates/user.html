@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}ToWatchList - {{ user.username }}{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{{ user.username }}</h1>
+    {% if user.first_name and user.last_name %}
+    <p>
+        {{ user.first_name }} {{ user.last_name }}
+    </p>
+    {% endif %}
+</div>
+{% endblock %}
