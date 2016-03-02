@@ -10,5 +10,10 @@
         {{ user.first_name }} {{ user.last_name }}
     </p>
     {% endif %}
+    <p>
+        {% if user == current_user %}
+            <a class="btn btn-primary" href="{{ url_for('main.edit_profile') }}">Edit Profile</a>
+        {% endif %}
+    </p>
 </div>
 {% endblock %}
