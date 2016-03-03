@@ -9,6 +9,9 @@
     <p>
         {{ user.first_name }} {{ user.last_name }}
     </p>
+    <p>
+        {{ user.links.count() }} links to watch
+    </p>
     {% endif %}
     <p>
         {% if user == current_user %}
@@ -16,4 +19,8 @@
         {% endif %}
     </p>
 </div>
+<h3>
+    Links to Watch
+</h3>
+{% include '_posts.html' %}
 {% endblock %}

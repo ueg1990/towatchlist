@@ -1,0 +1,10 @@
+<ul class="links">
+    {% for link in links %}
+    <li class="link">
+        <div class="link-content">
+            <div class="link-date">{{ link.date }}</div>
+            <div class="link-url"><a href="{{ link.url }}">{{ link.name }}</a></div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>

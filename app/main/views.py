@@ -4,7 +4,7 @@ from flask.ext.login import current_user, login_required
 from . import main
 from .forms import EditProfileForm
 from .. import db
-from ..models import User
+from ..models import Link, User
 
 
 @main.route('/')
@@ -30,7 +30,8 @@ def index():
 @main.route('/user/<username>')
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', user=user)
+    links = user.links.order_by(Link.date.desc()).filter_by(seen=False).all()
+    return render_template('user.html', user=user, links=links)
 
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
@@ -49,3 +50,8 @@ def edit_profile():
     form.first_name.data = current_user.first_name
     form.last_name.data = current_user.last_name
     return render_template('edit_profile.html', form=form)
+
+
+@main.route('/crawl/<username>')
+def crawl():
+    # add logic to crawl

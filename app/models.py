@@ -1,3 +1,5 @@
+import datetime
+
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from flask.ext.login import UserMixin
@@ -95,7 +97,8 @@ class Link(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(120))
     url = db.Column(db.String(240))
-    date = db.Column(db.Date)
+    date = db.Column(db.Date, index=True, default=datetime.datetime.today().date())
+    seen = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
