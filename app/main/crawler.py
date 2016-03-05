@@ -6,22 +6,24 @@ from bs4 import BeautifulSoup
 
 TO_CRAWL = {'fullmatchesandshows':
                {'url': 'http://www.fullmatchesandshows.com/',
-                'shows': ['BBC Match of the Day', 'European Football Show',
-                          'ESPN FC']
+                'shows': {'BBC Match of the Day', 'European Football Show',
+                          'ESPN FC'}
+               },
+            'watchseriesustv':
+               {'url': 'http://watchseriesus.tv/',
+                'shows': {'The Daily Show', ' John Oliver',
+                          'Full Frontal With Samantha Bee'}
                }
-            }
+           }
 
 
-def crawl():
-    for crawler, info in TO_CRAWL.items():
-         yield from globals()[crawler](info)
+def crawler():
+    for func, info in TO_CRAWL.items():
+         yield from globals()[func](info['url'], info['shows'])
 
 
-def fullmatchesandshows(info):
-    url = info['url']
-    shows = info['shows']
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+def fullmatchesandshows(url, shows):
+    soup = make_soup(url)
     divs = iter(soup.find_all('div', {'class': 'td-block-span4'}))
     for div in divs:
         entry = div.find(itemprop='url')
@@ -35,6 +37,29 @@ def fullmatchesandshows(info):
             yield name, href, image, date
 
 
+def watchseriesustv(url, shows):
+    soup = make_soup(url)
+    divs = iter(soup.find_all('div', {'class': 'moviefilm'}))
+    for div in divs:
+        anchor = div.find('a', href=True)
+        img = anchor.find('img')
+        name = img['alt']
+        for show in shows:
+            if show in name:
+                src = img['src']
+                href = anchor['href']
+                break
+        else:
+            continue
+        yield name, href, src
+
+
+def make_soup(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    return soup
+
+
 if __name__ == '__main__':
-    for i in crawl():
+    for i in crawler():
         print(i)
