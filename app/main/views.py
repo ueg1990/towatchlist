@@ -1,5 +1,5 @@
 from flask import (render_template, flash, redirect, session, url_for, request,
-                   Response)
+                   jsonify)
 from flask.ext.login import current_user, login_required
 
 from . import main
@@ -56,10 +56,12 @@ def edit_profile():
 
 @main.route('/crawl/<username>')
 def crawl(username):
+    results = []
     user = User.query.filter_by(username=username).first_or_404()
     for result in crawler():
         name, url, image, date = result
         link = Link(name=name, url=url, image=image, date=date, user_id=user.id, seen=False)
+        results.append({'name': name, 'url': url, 'image': image, 'date': date.isoformat()})
         db.session.add(link)
-        db.session.commit()
-    return Response(status=200, mimetype="application/json")
+    db.session.commit()
+    return jsonify({'results': results})

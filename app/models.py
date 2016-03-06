@@ -65,7 +65,6 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-
     def generate_email_change_token(self, new_email, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'change_email': self.id, 'new_email': new_email})
@@ -96,9 +95,10 @@ def load_user(id):
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(120))
-    url = db.Column(db.String(240))
-    date = db.Column(db.Date, index=True, default=datetime.datetime.today().date())
+    url = db.Column(db.String(240), unique=True)
+    date = db.Column(db.Date, index=True)
     seen = db.Column(db.Boolean, default=False)
+    image = db.Column(db.String(240))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
