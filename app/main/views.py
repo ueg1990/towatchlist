@@ -1,10 +1,12 @@
-from flask import render_template, flash, redirect, session, url_for, request
+from flask import (render_template, flash, redirect, session, url_for, request,
+                   Response)
 from flask.ext.login import current_user, login_required
 
 from . import main
-from .forms import EditProfileForm
 from .. import db
 from ..models import Link, User
+from .crawler import crawler
+from .forms import EditProfileForm
 
 
 @main.route('/')
@@ -53,5 +55,11 @@ def edit_profile():
 
 
 @main.route('/crawl/<username>')
-def crawl():
-    # add logic to crawl
+def crawl(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    for result in crawler():
+        name, url, image, date = result
+        link = Link(name=name, url=url, image=image, date=date, user_id=user.id, seen=False)
+        db.session.add(link)
+        db.session.commit()
+    return Response(status=200, mimetype="application/json")

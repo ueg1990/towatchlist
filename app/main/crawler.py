@@ -19,7 +19,7 @@ TO_CRAWL = {'fullmatchesandshows':
 
 def crawler():
     for func, info in TO_CRAWL.items():
-         yield from globals()[func](info['url'], info['shows'])
+        yield from globals()[func](info['url'], info['shows'])
 
 
 def fullmatchesandshows(url, shows):
@@ -38,6 +38,7 @@ def fullmatchesandshows(url, shows):
 
 
 def watchseriesustv(url, shows):
+    today = datetime.datetime.today().date()
     soup = make_soup(url)
     divs = iter(soup.find_all('div', {'class': 'moviefilm'}))
     for div in divs:
@@ -51,7 +52,7 @@ def watchseriesustv(url, shows):
                 break
         else:
             continue
-        yield name, href, src
+        yield name, href, src, today
 
 
 def make_soup(url):

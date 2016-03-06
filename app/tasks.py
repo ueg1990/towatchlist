@@ -5,7 +5,7 @@ from flask.ext.mail import Message
 
 from . import app, mail
 
-PREFIX = '[ToWatchList]'
+PREFIX = '[ToWatchList] '
 MAIL_SENDER = 'ToWatchList Admin <{0}>'.format(app.config['MAIL_USERNAME'])
 
 
