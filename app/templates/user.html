@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 
 {% block title %}ToWatchList - {{ user.username }}{% endblock %}
 
@@ -23,4 +24,9 @@
     Links to Watch
 </h3>
 {% include '_links.html' %}
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'main.user', username=user.username) }}
+</div>
+{% endif %}
 {% endblock %}

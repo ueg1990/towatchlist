@@ -1,6 +1,7 @@
 from flask import (render_template, flash, redirect, session, url_for, request,
-                   jsonify)
+                   jsonify, current_app)
 from flask.ext.login import current_user, login_required
+from sqlalchemy.exc import IntegrityError
 
 from . import main
 from .. import db
@@ -32,8 +33,13 @@ def index():
 @main.route('/user/<username>')
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    links = user.links.order_by(Link.date.desc()).filter_by(seen=False).all()
-    return render_template('user.html', user=user, links=links)
+    page = request.args.get('page', 1, type=int)
+    pagination = user.links.order_by(Link.date.desc()).paginate(
+        page, per_page=current_app.config['LINKS_PER_PAGE'],
+        error_out=False)
+    links = pagination.items
+    return render_template('user.html', user=user, links=links,
+                           pagination=pagination)
 
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
@@ -61,7 +67,12 @@ def crawl(username):
     for result in crawler():
         name, url, image, date = result
         link = Link(name=name, url=url, image=image, date=date, user_id=user.id, seen=False)
-        results.append({'name': name, 'url': url, 'image': image, 'date': date.isoformat()})
-        db.session.add(link)
-    db.session.commit()
+        try:
+            db.session.add(link)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+        else:
+            results.append({'name': name, 'url': url, 'image': image,
+                            'date': date.isoformat()})
     return jsonify({'results': results})

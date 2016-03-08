@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 TO_CRAWL = {'fullmatchesandshows':
                {'url': 'http://www.fullmatchesandshows.com/',
                 'shows': {'BBC Match of the Day', 'European Football Show',
-                          'ESPN FC'}
+                          'ESPN FC', 'BBC Match of the Day 2'}
                },
             'watchseriesustv':
                {'url': 'http://watchseriesus.tv/',
