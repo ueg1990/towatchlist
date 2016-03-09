@@ -76,3 +76,20 @@ def crawl(username):
             results.append({'name': name, 'url': url, 'image': image,
                             'date': date.isoformat()})
     return jsonify({'results': results})
+
+
+@main.route('/delete-links/<username>')
+@login_required
+def delete_links(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    link_ids = request.form.getlist("link")
+    if link_ids is None:
+        flash('Links not found.')
+        return redirect(url_for('main.user'), user=user)
+    if user.id != current_user.id:
+        flash('You cannot delete this link.')
+        return redirect(url_for('main.user'), user=user)
+    Link.query.filter(Link.id.in_(link_ids)).delete()
+    db.session.commit()
+    flash('Your links have been link.')
+    return redirect(url_for('main.user'), user=user)
