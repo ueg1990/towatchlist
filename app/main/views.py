@@ -78,18 +78,30 @@ def crawl(username):
     return jsonify({'results': results})
 
 
-@main.route('/delete-links/<username>')
+@main.route('/delete-links')
 @login_required
 def delete_links(username):
-    user = User.query.filter_by(username=username).first_or_404()
     link_ids = request.form.getlist("link")
     if link_ids is None:
         flash('Links not found.')
-        return redirect(url_for('main.user'), user=user)
-    if user.id != current_user.id:
-        flash('You cannot delete this link.')
-        return redirect(url_for('main.user'), user=user)
+        return redirect(url_for('main.user'), user=current_user)
     Link.query.filter(Link.id.in_(link_ids)).delete()
     db.session.commit()
-    flash('Your links have been link.')
-    return redirect(url_for('main.user'), user=user)
+    flash('Your links have been deleted.')
+    return redirect(url_for('main.user'), user=current_user)
+
+
+@main.route('/set-seen')
+@login_required
+def delete_links(username):
+    link_ids = request.form.getlist("link")
+    if link_ids is None:
+        flash('Links not found.')
+        return redirect(url_for('main.user'), user=current_user)
+    links = Link.query.filter(Link.id.in_(link_ids))
+    for link in links:
+        link.seen = True
+        db.session.add(link)
+    db.session.commit()
+    flash('Your links have been set to  seen.')
+    return redirect(url_for('main.user'), user=current_user)
