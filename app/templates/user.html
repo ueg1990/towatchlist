@@ -20,13 +20,26 @@
         {% endif %}
     </p>
 </div>
-<h3>
-    Links to Watch
-</h3>
-{% include '_links.html' %}
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, 'main.user', username=user.username) }}
+<div class="container">
+    <div class="row col-md-2">
+    </div>
+    <div class="row col-md-8">
+        <h3>
+            Links to Watch
+        </h3>
+        <div class="btn-toolbar">
+            <button type="button" class="btn btn-primary">Mark as Seen</button>
+            <button type="button" class="btn btn-danger">Delete</button>
+        </div>
+        <br>
+        {% include '_links.html' %}
+        {% if pagination %}
+            <div class="pagination">
+                {{ macros.pagination_widget(pagination, 'main.user', username=user.username) }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="row col-md-2">
+    </div>
 </div>
-{% endif %}
 {% endblock %}

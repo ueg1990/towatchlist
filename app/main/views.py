@@ -93,7 +93,7 @@ def delete_links(username):
 
 @main.route('/set-seen')
 @login_required
-def delete_links(username):
+def set_seen(username):
     link_ids = request.form.getlist("link")
     if link_ids is None:
         flash('Links not found.')
