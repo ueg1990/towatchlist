@@ -34,7 +34,7 @@ def index():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    pagination = user.links.order_by(Link.date.desc()).paginate(
+    pagination = user.links.order_by(Link.date.desc()).filter_by(seen=False).paginate(
         page, per_page=current_app.config['LINKS_PER_PAGE'],
         error_out=False)
     links = pagination.items
@@ -78,30 +78,33 @@ def crawl(username):
     return jsonify({'results': results})
 
 
-@main.route('/delete-links')
+@main.route('/delete-links', methods=['POST'])
 @login_required
-def delete_links(username):
-    link_ids = request.form.getlist("link")
+def delete_links():
+    link_ids = request.form['selected'].split(',')
+    print(link_ids)
     if link_ids is None:
         flash('Links not found.')
-        return redirect(url_for('main.user'), user=current_user)
-    Link.query.filter(Link.id.in_(link_ids)).delete()
+        return redirect(url_for('main.user', username=current_user.username))
+    links = Link.query.filter(Link.id.in_(link_ids)) #.delete()
+    for link in links:
+        db.session.delete(link)
     db.session.commit()
     flash('Your links have been deleted.')
-    return redirect(url_for('main.user'), user=current_user)
+    return redirect(url_for('main.user', username=current_user.username))
 
 
-@main.route('/set-seen')
+@main.route('/set-seen', methods=['POST'])
 @login_required
-def set_seen(username):
-    link_ids = request.form.getlist("link")
-    if link_ids is None:
+def set_seen():
+    link_ids = request.form['selected'].split(',')
+    if not link_ids:
         flash('Links not found.')
-        return redirect(url_for('main.user'), user=current_user)
+        return redirect(url_for('main.user', username=current_user.username))
     links = Link.query.filter(Link.id.in_(link_ids))
     for link in links:
         link.seen = True
         db.session.add(link)
     db.session.commit()
     flash('Your links have been set to  seen.')
-    return redirect(url_for('main.user'), user=current_user)
+    return redirect(url_for('main.user', username=current_user.username))

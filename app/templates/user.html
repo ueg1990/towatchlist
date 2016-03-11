@@ -27,10 +27,12 @@
         <h3>
             Links to Watch
         </h3>
-        <div class="btn-toolbar">
-            <button type="button" class="btn btn-primary">Mark as Seen</button>
-            <button type="button" class="btn btn-danger">Delete</button>
-        </div>
+        {% if user == current_user %}
+            <div class="btn-toolbar">
+                <button type="button" class="btn btn-primary" onclick="onClickSeen()">Mark as Seen</button>
+                <button type="button" class="btn btn-danger" onclick="onClickDelete()">Delete</button>
+            </div>
+        {% endif %}
         <br>
         {% include '_links.html' %}
         {% if pagination %}
