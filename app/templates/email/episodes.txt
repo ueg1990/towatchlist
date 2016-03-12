@@ -1,0 +1,13 @@
+Dear {{ user.username }},
+
+Here are the latest episodes in your ToWatchList:
+
+{% for result in results %}
+    • {{ result.name }}: {{ result.url }}
+{% endfor %}
+
+Sincerely,
+
+ToWatchList
+
+Note: replies to this email address are not monitored.

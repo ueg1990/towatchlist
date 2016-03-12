@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from . import main
 from .. import db
 from ..models import Link, User
+from ..tasks import send_email
 from .crawler import crawler
 from .forms import EditProfileForm
 
@@ -75,6 +76,9 @@ def crawl(username):
         else:
             results.append({'name': name, 'url': url, 'image': image,
                             'date': date.isoformat()})
+    if results:
+        send_email(user.email, 'You got some new episodes', 'email/episodes',
+                   user=user, results=results)
     return jsonify({'results': results})
 
 

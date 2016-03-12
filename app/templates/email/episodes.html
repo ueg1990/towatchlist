@@ -1,0 +1,10 @@
+<p>Dear {{ user.username }},</p>
+<p>Here are the latest episodes in your ToWatchList:</p>
+<ul>
+{% for result in results %}
+    <li><a href="{{ result.url }}">{{ result.name }}</a></li>
+{% endfor %}
+</ul>
+<p>Sincerely,</p>
+<p>ToWatchList</p>
+<p><small>Note: replies to this email address are not monitored.</small></p>
