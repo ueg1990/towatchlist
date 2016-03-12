@@ -29,8 +29,8 @@
         </h3>
         {% if user == current_user %}
             <div class="btn-toolbar">
-                <button type="button" class="btn btn-primary" onclick="onClickSeen()">Mark as Seen</button>
-                <button type="button" class="btn btn-danger" onclick="onClickDelete()">Delete</button>
+                <button type="button" class="btn btn-primary" onclick="onClickSeen()" id="seen" disabled>Mark as Seen</button>
+                <button type="button" class="btn btn-danger" onclick="onClickDelete()" id="delete" disabled>Delete</button>
             </div>
         {% endif %}
         <br>

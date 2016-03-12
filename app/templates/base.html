@@ -4,7 +4,6 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-<script type="text/javascript" src="{{ url_for('static', filename='towatchlist.js') }}"></script>
 {% endblock %}
 
 {% block navbar %}
@@ -55,4 +54,7 @@
     {% endfor %}
 	{% block page_content %}{% endblock %}
 </div>
+{% block scripts %}{{ super() }}
+	<script type="text/javascript" src="{{ url_for('static', filename='towatchlist.js') }}"></script>
+{%- endblock scripts %}
 {% endblock %}

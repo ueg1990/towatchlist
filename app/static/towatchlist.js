@@ -1,3 +1,13 @@
+$('document').ready(function(){
+	var checkboxes = $("input[type='checkbox']")
+	checkboxes.click(function() {
+		$('#seen').prop('disabled', !checkboxes.is(":checked"));
+		$('#delete').prop('disabled', !checkboxes.is(":checked"));
+	});
+
+});
+
+
 function onClickSeen() {
 	/* declare an checkbox array */
 	var chkArray = [];
