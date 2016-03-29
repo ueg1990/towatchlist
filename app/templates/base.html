@@ -55,7 +55,3 @@
 	{% block page_content %}{% endblock %}
 </div>
 {% endblock %}
-{% block scripts %}
-{{ super() }}
-<script type="text/javascript" src="{{ url_for('static', filename='towatchlist.js') }}"></script>
-{% endblock %}

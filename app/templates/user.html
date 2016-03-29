@@ -21,7 +21,7 @@
 <div class="container">
     <div class="row col-md-2">
     </div>
-    <div class="row col-md-8">
+    <div class="row col-md-8" id="links">
         <h3>
             Links to Watch
         </h3>
@@ -32,14 +32,21 @@
             </div>
         {% endif %}
         <br>
-        {% include '_links.html' %}
-        {% if pagination %}
+        <table class="table table-striped table-bordered todolist">
+    
+        </table>
+        <!-- {% include '_links.html' %} -->
+        <!-- {% if pagination %}
             <div class="pagination">
                 {{ macros.pagination_widget(pagination, 'main.user', username=user.username) }}
             </div>
-        {% endif %}
+        {% endif %} -->
     </div>
     <div class="row col-md-2">
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='towatchlist.js') }}"></script>
 {% endblock %}

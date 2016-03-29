@@ -1,5 +1,5 @@
 from flask import (render_template, flash, redirect, session, url_for, request,
-                   jsonify, current_app)
+                   jsonify, current_app, g)
 from flask.ext.login import current_user, login_required
 from sqlalchemy.exc import IntegrityError
 
@@ -27,6 +27,22 @@ def user(username):
     links = pagination.items
     return render_template('user.html', user=user, links=links,
                            pagination=pagination)
+    return render_template('user.html', user=user)
+
+@main.route('/userdata/<username>')
+@login_required
+def user_data(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get('page', 1, type=int)
+    pagination = user.links.order_by(Link.date.desc()).filter_by(seen=False).paginate(
+        page, per_page=current_app.config['LINKS_PER_PAGE'],
+        error_out=False)
+    links = []
+    for item in pagination.items:
+        links.append({'id': item.id, 'name': item.name, 'url': item.url, 'date': item.date.isoformat()})
+    if user == current_user:
+        return jsonify({'links':links, 'is_user':True})
+    return jsonify({'links':links, 'is_user':False})
 
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
